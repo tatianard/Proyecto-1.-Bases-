@@ -57,10 +57,44 @@ for sensor in sensores:
 
 df_mediciones = pd.DataFrame(mediciones)
 
+# Incorporación de anomalías sintéticas
+PROPORCION_ANOMALIAS = 0.01  #Seleccionamos aleatoriamente el 1% de las mediciones
+
+n_anomalias = int(
+    len(df_mediciones) * PROPORCION_ANOMALIAS
+)
+
+# Marcar todas las observaciones como normales
+df_mediciones["es_anomalia"] = False
+
+# Seleccionar observaciones aleatoriamente
+indices_anomalos = rng.choice(
+    df_mediciones.index,
+    size=n_anomalias,
+    replace=False
+)
+
+# Introducir valores anómalos de presión
+df_mediciones.loc[indices_anomalos, "presion"] = 8.0  # Cambiamos su presión
+
+# Marcar las observaciones alteradas
+df_mediciones.loc[indices_anomalos, "es_anomalia"] = True
+
+# Verificar mediciones generadas
+
 print("\nPrimeras mediciones:")
 print(df_mediciones.head())
 
 print("\nTotal de mediciones:", len(df_mediciones))
+
+
+# Verificar anomalías
+print("\nResumen de anomalías:")
+print(df_mediciones["es_anomalia"].value_counts())
+print("\nPorcentaje de anomalías:")
+print(df_mediciones["es_anomalia"].mean() * 100)
+
+
 
 
 
