@@ -1,5 +1,6 @@
 import pandas as pd
 import numpy as np
+from pathlib import Path
 from datetime import datetime, timedelta
 
 # Parámetros del proyecto
@@ -97,11 +98,71 @@ print(df_mediciones["es_anomalia"].mean() * 100)
 
 
 
+# Validación de la consistencia de los datos
+
+# 1. Cantidad de sensores
+print("\nSensores únicos:")
+print(df_mediciones["sensor_id"].nunique())
+
+# 2. Total de mediciones
+print("\nTotal de mediciones:")
+print(len(df_mediciones))
+
+# 3. Mediciones por sensor
+mediciones_por_sensor = df_mediciones.groupby(
+    "sensor_id"
+).size()
+
+print("\nResumen de mediciones por sensor:")
+print(mediciones_por_sensor.describe())
+
+# 4. Valores faltantes
+print("\nValores faltantes por variable:")
+print(df_mediciones.isnull().sum())
+
+# 5. Registros duplicados
+duplicados = df_mediciones.duplicated(
+    subset=["sensor_id", "timestamp"]
+).sum()
+
+print("\nRegistros duplicados:", duplicados)
+
+# 6. Proporcion de anomalías
+porcentaje_anomalias = (
+    df_mediciones["es_anomalia"].mean() * 100
+)
+
+print("\nPorcentaje de anomalías:")
+print(round(porcentaje_anomalias, 2))
+
+# 7. Comprobaciones automáticas
+assert df_mediciones["sensor_id"].nunique() == 1000
+assert len(df_mediciones) == 1000000
+assert mediciones_por_sensor.eq(1000).all()
+assert not df_mediciones.isnull().any().any()
+assert duplicados == 0
+assert df_mediciones["es_anomalia"].sum() == 10000
 
 
 
 
+# Exportación de datos a CSV
 
+# Crear carpeta para los datos generados
+carpeta_datos = Path("data")
+carpeta_datos.mkdir(exist_ok=True)
+
+# Exportar sensores
+df_sensores.to_csv(
+    carpeta_datos / "sensores.csv",
+    index=False
+)
+
+# Exportar mediciones
+df_mediciones.to_csv(
+    carpeta_datos / "mediciones.csv",
+    index=False
+)
 
 
 
