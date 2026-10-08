@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS mediciones_por_sensor (
     presion double,
     temperatura double,
     calidad text,
-    PRIMARY KEY ((sensor_id), timestamp)
+    PRIMARY KEY ((sensor_id, mes_anio), timestamp)
 ) WITH CLUSTERING ORDER BY (timestamp DESC);
 
 
@@ -27,5 +27,5 @@ CREATE TABLE IF NOT EXISTS mediciones_por_zona (
     presion double,
     temperatura double,
     calidad text,
-    PRIMARY KEY ((zona_id), timestamp)
+    PRIMARY KEY ((zona_id, mes_anio), timestamp)
 ) WITH CLUSTERING ORDER BY (timestamp DESC);
