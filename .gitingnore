@@ -1,0 +1,12 @@
+# Datos generados
+data/
+
+# Archivos temporales de Python
+__pycache__/
+*.pyc
+
+# Entornos virtuales
+.venv/
+
+# Variables de entorno privadas
+.env
